@@ -1,25 +1,115 @@
 ﻿@page "/Employees/View/{empId}"
 
 @using Northwind.Data.Services
-@using Northwind.Data.Models
+@using Northwind.Blazor.ViewModels
 
+@inject AutoMapper.IMapper _mapper
 @inject IEmployeeService _empService
 
-@if(employee == null)
+@if (employee == null)
 {
-    <LoadingPlaceholder/>
+    <LoadingPlaceholder />
 }
 else
 {
-    <h1>@(employee.FirstName + " " + employee.LastName)</h1>
+    <h1>@employee.FullName</h1>
 
-    <hr/>
+    <hr />
 
     <form>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Id</label>
             <div class="col-sm-10">
                 <input type="text" readonly class="form-control-plaintext" value="@employee.EmployeeId" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Salutation</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.TitleOfCourtesy" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.FullName" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Job Title</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.Title" />
+            </div>
+        </div>
+
+        @if (employee.LineManager != null)
+        {
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Line Manager</label>
+                <div class="col-sm-10">
+                    <NavLink href="@("Employees/View/" + employee.LineManager.EmployeeId)">
+                        @employee.LineManager.FullName
+                    </NavLink>
+                </div>
+            </div>
+        }
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">D.O.B</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.BirthDate?.ToString("dd/MM/yyyy")" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Date Hired</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.HireDate?.ToString("dd/MM/yyyy")" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Address</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.Address" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">City</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.City" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Region</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.Region" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Post Code</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.PostalCode" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Country</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.Country" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Extension</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.Extension" />
             </div>
         </div>
 
@@ -31,10 +121,12 @@ else
     [Parameter]
     public string empId { get; set; }
 
-    private Employees employee;
+    private EmployeeViewModel employee;
+    private string img;
 
     protected override async Task OnInitializedAsync()
     {
-        employee = await _empService.GetByIdAsync(int.Parse(empId));
+        var emp = await _empService.GetByIdAsync(int.Parse(empId));
+        employee = _mapper.Map<EmployeeViewModel>(emp);
     }
 }

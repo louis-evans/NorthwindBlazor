@@ -35,7 +35,8 @@ namespace Northwind.Data.Services
         {
             return _db.Employees
                 .Include(x => x.Orders)
-                .Include(x => x.EmployeeTerritories);
+                .Include(x => x.EmployeeTerritories)
+                .Include(x => x.InverseReportsToNavigation);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Northwind.Data.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Northwind.Blazor.ViewModels
 {
@@ -22,6 +24,9 @@ namespace Northwind.Blazor.ViewModels
         public string Notes { get; set; }
         public int? ReportsTo { get; set; }
         public string PhotoPath { get; set; }
+        public EmployeeViewModel LineManager { get; set; }
+        public IEnumerable<EmployeeTerritories> Territories { get; set; }
+        public IEnumerable<Orders> Orders { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
     }

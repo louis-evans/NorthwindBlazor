@@ -8,7 +8,9 @@ namespace Northwind.Blazor.Profiles
     {
         public ViewModelProfile()
         {
-            CreateMap<Employees, EmployeeViewModel>();
+            CreateMap<Employees, EmployeeViewModel>()
+                .ForMember(x => x.Territories, opts => opts.MapFrom(src => src.EmployeeTerritories))
+                .ForMember(x => x.LineManager, opts => opts.MapFrom(src => src.ReportsToNavigation));
         }
     }
 }
