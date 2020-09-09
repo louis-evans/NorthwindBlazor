@@ -9,6 +9,7 @@ namespace Northwind.Data.Services
     public interface IEmployeeService
     {
         Task<IEnumerable<Employees>> GetAllAsync();
+        Task<Employees> GetByIdAsync(int id);
     }
 
     public class EmployeeService : IEmployeeService
@@ -23,6 +24,11 @@ namespace Northwind.Data.Services
         public async Task<IEnumerable<Employees>> GetAllAsync()
         {
             return await QueryBase().ToListAsync();
+        }
+
+        public Task<Employees> GetByIdAsync(int id)
+        {
+            return QueryBase().FirstAsync(e => e.EmployeeId == id);
         }
 
         private IQueryable<Employees> QueryBase()

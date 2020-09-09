@@ -1,15 +1,16 @@
 ﻿@page "/Employees"
 
-@using Northwind.Data.Models
+@using Northwind.Blazor.ViewModels 
 @using Northwind.Data.Services 
 
-@inject IEmployeeService _employeeService;
+@inject AutoMapper.IMapper _mapper
+@inject IEmployeeService _employeeService
 
 <h1>Employees</h1>
 
 @if (employees == null)
 {
-    <p>Loading...</p>
+    <LoadingPlaceholder />
 }
 else
 {
@@ -28,7 +29,7 @@ else
             {
                 <tr>
                     <td>@emp.EmployeeId</td>
-                    <td>@(emp.FirstName + " " + emp.LastName)</td>
+                    <td>@emp.FullName</td>
                     <td>@emp.Title</td>
                     <td>@(emp.HireDate?.ToString("dd/MM/yyyy"))</td>
                     <td>
@@ -46,10 +47,12 @@ else
 }
 
 @code {
-    private IEnumerable<Employees> employees;
+    private IEnumerable<EmployeeViewModel> employees;
 
     protected override async Task OnInitializedAsync()
     {
-        employees = await _employeeService.GetAllAsync();
+        var employeeModels = await _employeeService.GetAllAsync();
+
+        employees = _mapper.Map<IEnumerable<EmployeeViewModel>>(employeeModels);
     }
 }

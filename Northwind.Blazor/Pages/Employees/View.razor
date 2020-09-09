@@ -1,10 +1,40 @@
 ﻿@page "/Employees/View/{empId}"
 
-<h3>View @empId</h3>
+@using Northwind.Data.Services
+@using Northwind.Data.Models
+
+@inject IEmployeeService _empService
+
+@if(employee == null)
+{
+    <LoadingPlaceholder/>
+}
+else
+{
+    <h1>@(employee.FirstName + " " + employee.LastName)</h1>
+
+    <hr/>
+
+    <form>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Id</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@employee.EmployeeId" />
+            </div>
+        </div>
+
+    </form>
+}
 
 @code {
-    
+
     [Parameter]
     public string empId { get; set; }
 
+    private Employees employee;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await _empService.GetByIdAsync(int.Parse(empId));
+    }
 }

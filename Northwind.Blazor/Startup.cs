@@ -17,6 +17,7 @@ using Northwind.Blazor.Areas.Identity;
 using Northwind.Blazor.Data;
 using Northwind.Data.Models;
 using Northwind.Data.Services;
+using AutoMapper;
 
 namespace Northwind.Blazor
 {
@@ -35,6 +36,8 @@ namespace Northwind.Blazor
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NorthwindConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAutoMapper(GetType());
 
             services.AddRazorPages();
 
