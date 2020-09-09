@@ -14,6 +14,25 @@
             <NavLink class="nav-link" href="Employees" Match="NavLinkMatch.All">
                 <span class="oi oi-people"></span> Employees
             </NavLink>
+
+            <hr/>
+
+            <AuthorizeView>
+                <Authorized>
+                    <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+                    <form method="post" action="Identity/Account/LogOut">
+                        <button type="submit" class="nav-link btn btn-link">Log out</button>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    @*<a href="Identity/Account/Register">Register</a>*@
+                    <NavLink class="nav-link" href="Identity/Account/Login" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-login"></span> Log in
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+
+
         </li>
     </ul>
 </div>
