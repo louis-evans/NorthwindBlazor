@@ -12,14 +12,35 @@
                 <span class="oi oi-home"></span> Home
             </NavLink>
             <NavLink class="nav-link" href="Employees" Match="NavLinkMatch.All">
-                <span class="oi oi-people"></span> Employees
+                <span class="oi oi-briefcase"></span> Employees
+            </NavLink>
+            <NavLink class="nav-link" href="Customers" Match="NavLinkMatch.All">
+                <span class="oi oi-people"></span> Customers
+            </NavLink>
+            <NavLink class="nav-link" href="Orders" Match="NavLinkMatch.All">
+                <span class="oi oi-dollar"></span> Orders
+            </NavLink>
+            <NavLink class="nav-link" href="Products" Match="NavLinkMatch.All">
+                <span class="oi oi-spreadsheet"></span> Products
+            </NavLink>
+            <NavLink class="nav-link" href="Regions" Match="NavLinkMatch.All">
+                <span class="oi oi-map"></span> Regions
+            </NavLink>
+            <NavLink class="nav-link" href="Shippers" Match="NavLinkMatch.All">
+                <span class="oi oi-box"></span> Shippers
+            </NavLink>
+            <NavLink class="nav-link" href="Suppliers" Match="NavLinkMatch.All">
+                <span class="oi oi-credit-card"></span> Suppliers
+            </NavLink>
+            <NavLink class="nav-link" href="Territories" Match="NavLinkMatch.All">
+                <span class="oi oi-map-marker"></span> Territories
             </NavLink>
 
-            <hr/>
+            <hr />
 
             <AuthorizeView>
                 <Authorized>
-                    <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+                    <a href="Identity/Account/Manage">@context.User.Identity.Name</a>
                     <form method="post" action="Identity/Account/LogOut">
                         <button type="submit" class="nav-link btn btn-link">Log out</button>
                     </form>
