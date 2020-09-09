@@ -1,0 +1,55 @@
+﻿@page "/Employees"
+
+@using Northwind.Data.Models
+@using Northwind.Data.Services 
+
+@inject IEmployeeService _employeeService;
+
+<h1>Employees</h1>
+
+@if (employees == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Job Title</th>
+                <th>Hire Date</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in employees)
+            {
+                <tr>
+                    <td>@emp.EmployeeId</td>
+                    <td>@(emp.FirstName + " " + emp.LastName)</td>
+                    <td>@emp.Title</td>
+                    <td>@(emp.HireDate?.ToString("dd/MM/yyyy"))</td>
+                    <td>
+                        <NavLink class="pr-2" href="@("Employees/View/" + emp.EmployeeId)">
+                            <span class="oi oi-eye"></span>
+                        </NavLink>
+                        <NavLink href="@("Employees/Edit/" + emp.EmployeeId)">
+                            <span class="oi oi-pencil"></span>
+                        </NavLink>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Employees> employees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await _employeeService.GetAllAsync();
+    }
+}
