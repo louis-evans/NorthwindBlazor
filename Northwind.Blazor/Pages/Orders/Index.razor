@@ -1,0 +1,115 @@
+﻿@page "/Orders"
+
+@inject AutoMapper.IMapper _mapper;
+@inject IOrderService _orderService;
+
+<h3>Orders</h3>
+
+@if (orders == null)
+{
+    <LoadingPlaceholder />
+}
+else
+{
+    <div class="row">
+        <div class="col-12 col-sm-3">
+            <span>Page <input type="text" style="width:50px;display:inline;" class="form-control" @bind="CurrentPageDisplay" /> of @pageCount</span>
+        </div>
+
+        <div class="col-12 col-sm-3">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" @onclick="OnPrevious">Previous</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" @onclick="OnNext">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date Created</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
+                    <td>@order.OrderDetails.Sum(x => x.Total).ToString("0.00")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private const int MaxPageCount = 10;
+
+    private int currentPage = 0;
+
+    private int CurrentPageDisplay
+    {
+        get
+        {
+            return currentPage;
+        }
+        set
+        {
+            currentPage = Math.Min(Math.Max(1, value), pageCount);
+            SetOrders();
+        }
+    }
+
+    private int pageCount => (int)Math.Floor((double)allOrders.Count() / MaxPageCount);
+
+    private IEnumerable<OrderViewModel> orders;
+    private IEnumerable<OrderViewModel> allOrders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var orderModels = await _orderService.GetAllAsync();
+        allOrders = _mapper.Map<IEnumerable<OrderViewModel>>(orderModels).OrderByDescending(o => o.OrderDate);
+
+        CurrentPageDisplay = 1;
+    }
+
+    private void OnPrevious()
+    {
+        if (currentPage > 0)
+        {
+            CurrentPageDisplay--;
+
+            SetOrders();
+        }
+    }
+
+    private void OnNext()
+    {
+        if (currentPage < pageCount)
+        {
+            CurrentPageDisplay++;
+
+            SetOrders();
+        }
+    }
+
+    private void OnPageChanged()
+    {
+
+    }
+
+    private void SetOrders()
+    {
+        orders = allOrders.Skip(currentPage * MaxPageCount).Take(10);
+    }
+}
