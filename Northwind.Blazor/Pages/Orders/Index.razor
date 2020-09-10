@@ -16,7 +16,7 @@ else
             <span>Page <input type="text" style="width:50px;display:inline;" class="form-control" @bind="CurrentPageDisplay" /> of @pageCount</span>
         </div>
 
-        <div class="col-12 col-sm-3">
+        <div class="col-12 col-sm-9 d-flex" style="flex-direction:row-reverse;">
             <nav>
                 <ul class="pagination">
                     <li class="page-item">
@@ -30,7 +30,7 @@ else
         </div>
     </div>
 
-    <table class="table">
+    <table class="table table-hover table-striped">
         <thead>
             <tr>
                 <th>Id</th>
@@ -42,7 +42,11 @@ else
             @foreach (var order in orders)
             {
                 <tr>
-                    <td>@order.OrderId</td>
+                    <td>
+                        <NavLink href=@("Orders/View/" + order.OrderId)>
+                            @order.OrderId
+                        </NavLink>
+                    </td>
                     <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
                     <td>@order.OrderDetails.Sum(x => x.Total).ToString("0.00")</td>
                 </tr>
@@ -61,16 +65,16 @@ else
     {
         get
         {
-            return currentPage;
+            return currentPage + 1;
         }
         set
         {
-            currentPage = Math.Min(Math.Max(1, value), pageCount);
+            currentPage = Math.Min(Math.Max(1, value), pageCount) - 1;
             SetOrders();
         }
     }
 
-    private int pageCount => (int)Math.Floor((double)allOrders.Count() / MaxPageCount);
+    private int pageCount => (int)Math.Ceiling((double)allOrders.Count() / MaxPageCount);
 
     private IEnumerable<OrderViewModel> orders;
     private IEnumerable<OrderViewModel> allOrders;
@@ -88,8 +92,6 @@ else
         if (currentPage > 0)
         {
             CurrentPageDisplay--;
-
-            SetOrders();
         }
     }
 
@@ -98,14 +100,7 @@ else
         if (currentPage < pageCount)
         {
             CurrentPageDisplay++;
-
-            SetOrders();
         }
-    }
-
-    private void OnPageChanged()
-    {
-
     }
 
     private void SetOrders()
