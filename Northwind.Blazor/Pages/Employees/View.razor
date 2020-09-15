@@ -12,7 +12,15 @@
 }
 else
 {
-    <h1>@employee.FullName</h1>
+    <div class="d-flex" style="flex-direction:row; flex-wrap:wrap;">
+        <h1 style="flex:6">
+            @employee.FullName
+        </h1>
+        <NavLink href="@("Employees/Edit/" + empId)" class="btn btn-primary" style="flex:1">
+            Edit
+        </NavLink>
+    </div>
+    
 
     <hr />
 
