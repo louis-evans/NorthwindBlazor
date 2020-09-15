@@ -21,7 +21,6 @@ else
                 <th>Name</th>
                 <th>Job Title</th>
                 <th>Hire Date</th>
-                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -29,17 +28,13 @@ else
             {
                 <tr>
                     <td>@emp.EmployeeId</td>
-                    <td>@emp.FullName</td>
-                    <td>@emp.Title</td>
-                    <td>@(emp.HireDate?.ToString("dd/MM/yyyy"))</td>
                     <td>
                         <NavLink class="pr-2" href="@("Employees/View/" + emp.EmployeeId)">
-                            <span class="oi oi-eye"></span>
-                        </NavLink>
-                        <NavLink href="@("Employees/Edit/" + emp.EmployeeId)">
-                            <span class="oi oi-pencil"></span>
+                            @emp.FullName
                         </NavLink>
                     </td>
+                    <td>@emp.Title</td>
+                    <td>@(emp.HireDate?.ToString("dd/MM/yyyy"))</td>
                 </tr>
             }
         </tbody>
