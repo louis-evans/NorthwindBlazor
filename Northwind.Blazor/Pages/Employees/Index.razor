@@ -46,7 +46,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var employeeModels = await _employeeService.GetAllAsync();
+        var employeeModels = await _employeeService.GetAll().OrderBy(e => e.EmployeeId).ToListAsync();
 
         employees = _mapper.Map<IEnumerable<EmployeeViewModel>>(employeeModels);
     }
