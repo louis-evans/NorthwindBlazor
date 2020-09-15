@@ -8,13 +8,18 @@ namespace Northwind.Blazor.Profiles
     {
         public ViewModelProfile()
         {
+            CreateMap<Customers, CustomerViewModel>();
+
             CreateMap<Employees, EmployeeViewModel>()
                 .ForMember(x => x.Territories, opts => opts.MapFrom(src => src.EmployeeTerritories))
                 .ForMember(x => x.LineManager, opts => opts.MapFrom(src => src.ReportsToNavigation));
 
-            CreateMap<Orders, OrderViewModel>();
+            CreateMap<Orders, OrderViewModel>()
+                .ForMember(x => x.Shipper, opts => opts.MapFrom(src => src.ShipViaNavigation));
 
             CreateMap<OrderDetails, OrderDetailViewModel>();
+
+            CreateMap<Shippers, ShipperViewModel>();
         }
     }
 }

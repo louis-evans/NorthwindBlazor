@@ -21,9 +21,9 @@ namespace Northwind.Blazor.ViewModels
         public string ShipPostalCode { get; set; }
         public string ShipCountry { get; set; }
 
-        public virtual Customers Customer { get; set; }
-        public virtual EmployeeViewModel Employee { get; set; }
-        public virtual Shippers ShipViaNavigation { get; set; }
-        public virtual ICollection<OrderDetailViewModel> OrderDetails { get; set; }
+        public CustomerViewModel Customer { get; set; }
+        public EmployeeViewModel Employee { get; set; }
+        public ShipperViewModel Shipper { get; set; }
+        public IEnumerable<OrderDetailViewModel> OrderDetails { get; set; }
     }
 }

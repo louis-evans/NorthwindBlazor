@@ -74,15 +74,15 @@ else
         }
     }
 
-    private int pageCount => (int)Math.Ceiling((double)allOrders.Count() / MaxPageCount);
+    private int pageCount = 0;
 
     private IEnumerable<OrderViewModel> orders;
-    private IEnumerable<OrderViewModel> allOrders;
 
     protected override async Task OnInitializedAsync()
     {
-        var orderModels = await _orderService.GetAllAsync();
-        allOrders = _mapper.Map<IEnumerable<OrderViewModel>>(orderModels).OrderByDescending(o => o.OrderDate);
+        var orderCount = await _orderService.GetAll().CountAsync();
+
+        pageCount = (int) Math.Ceiling((double) orderCount / MaxPageCount);
 
         CurrentPageDisplay = 1;
     }
@@ -105,6 +105,13 @@ else
 
     private void SetOrders()
     {
-        orders = allOrders.Skip(currentPage * MaxPageCount).Take(10);
+        var pagedOrders = _orderService.GetAll()
+                            .Include(x => x.OrderDetails)
+                            .OrderByDescending(o => o.OrderDate)
+                            .Skip(currentPage * MaxPageCount)
+                            .Take(MaxPageCount)
+                            .ToList();
+
+        orders = _mapper.Map<IEnumerable<OrderViewModel>>(pagedOrders);
     }
 }
