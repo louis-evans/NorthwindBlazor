@@ -3,4 +3,4 @@
 - Open a terminal window
 - Navigate to this directory
 - Run:
-	node generate-css
+	`` node generate-css ``
