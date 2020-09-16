@@ -5,6 +5,7 @@
 
 @inject AutoMapper.IMapper _mapper
 @inject IEmployeeService _empService
+@inject ITerritoryService _territoryService
 
 @if (employee == null)
 {
@@ -122,6 +123,30 @@ else
         </div>
 
     </form>
+
+    <hr />
+
+    <h4>Territories</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var t in employee.Territories)
+            {
+                <tr>
+                    <td>
+                        <NavLink href="@("Territories/View/" + t.TerritoryId)">
+                            @(GetTerritoryName(t.TerritoryId))
+                        </NavLink>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code {
@@ -130,11 +155,21 @@ else
     public string empId { get; set; }
 
     private EmployeeViewModel employee;
+    private IEnumerable<Territories> territories;
     private string img;
 
     protected override async Task OnInitializedAsync()
     {
         var emp = await _empService.GetByIdAsync(int.Parse(empId));
         employee = _mapper.Map<EmployeeViewModel>(emp);
+
+        var territoryIds = employee.Territories.Select(x => x.TerritoryId);
+
+        territories = await _territoryService.GetAll().Where(x => territoryIds.Contains(x.TerritoryId)).ToListAsync();
+    }
+
+    private string GetTerritoryName(string id)
+    {
+        return territories.First(x => x.TerritoryId == id).TerritoryDescription;
     }
 }
