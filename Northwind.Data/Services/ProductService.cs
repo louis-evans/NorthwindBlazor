@@ -31,7 +31,10 @@ namespace Northwind.Data.Services
 
         public Task<Products> GetByIdAsync(int id)
         {
-            return _db.Products.FirstAsync(p => p.ProductId == id);
+            return _db.Products
+                    .Include(x => x.Category)
+                    .Include(x => x.Supplier)
+                    .FirstAsync(p => p.ProductId == id);
         }
 
         public Task<string> GetNameAsync(int id)

@@ -1,0 +1,100 @@
+﻿@page "/Products/View/{productId}"
+
+@inject AutoMapper.IMapper _mapper
+@inject IProductService _productService
+
+@if(product == null)
+{
+    <LoadingPlaceholder />
+}
+else
+{
+    <h1>@product.ProductName</h1>
+
+    <hr />
+
+    <form>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Id</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.ProductId" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.ProductName" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Supplier</label>
+            <div class="col-sm-10">
+                <NavLink href="@("Suppliers/View/" + product.Supplier.SupplierId)">
+                    @product.Supplier.CompanyName
+                </NavLink>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Category</label>
+            <div class="col-sm-10">
+                <NavLink href="@("Categories/View/" + product.Category.CategoryId)">
+                    @product.Category.CategoryName
+                </NavLink>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Unit Price</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.UnitPrice.Value.Round()" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Quantity per Unit</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.QuantityPerUnit" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Units in Stock</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.UnitsInStock" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Units on Order</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.UnitsOnOrder" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Reorder Level</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" value="@product.ReorderLevel" />
+            </div>
+        </div>
+
+    </form>
+}
+
+@code {
+
+    [Parameter]
+    public string productId { get; set; }
+
+    private ProductViewModel product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var productModel = await _productService.GetByIdAsync(int.Parse(productId));
+
+        product = _mapper.Map<ProductViewModel>(productModel);
+    }
+}
