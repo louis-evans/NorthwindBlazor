@@ -11,6 +11,7 @@ using Northwind.Blazor.Data;
 using Northwind.Data.Models;
 using Northwind.Data.Services;
 using AutoMapper;
+using Northwind.Blazor.Helper;
 
 namespace Northwind.Blazor
 {
@@ -72,6 +73,8 @@ namespace Northwind.Blazor
 
         private void RegisterServices(IServiceCollection services)
         {
+            services.AddSingleton<UrlResolver>();
+
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IProductService, ProductService>();

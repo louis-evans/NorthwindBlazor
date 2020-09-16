@@ -5,6 +5,7 @@
 
 @inject AutoMapper.IMapper _mapper
 @inject IEmployeeService _employeeService
+@inject UrlResolver url
 
 <h1>Employees</h1>
 
@@ -29,7 +30,7 @@ else
                 <tr>
                     <td>@emp.EmployeeId</td>
                     <td>
-                        <NavLink class="pr-2" href="@("Employees/View/" + emp.EmployeeId)">
+                        <NavLink class="pr-2" href="@url.EmployeeView(emp.EmployeeId)">
                             @emp.FullName
                         </NavLink>
                     </td>
