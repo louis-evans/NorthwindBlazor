@@ -1,6 +1,7 @@
 ﻿@page "/Orders/View/{orderId}"
 
 @inject IOrderService _orderService;
+@inject IProductService _productService;
 @inject AutoMapper.IMapper _mapper;
 
 <h3>Order: @orderId</h3>
@@ -47,14 +48,14 @@ else
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Order Date</label>
                     <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" value="@order.OrderDate" />
+                        <input type="text" readonly class="form-control-plaintext" value="@order.OrderDate.ToDate()" />
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Required Date</label>
                     <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" value="@order.RequiredDate" />
+                        <input type="text" readonly class="form-control-plaintext" value="@order.RequiredDate.ToDate()" />
                     </div>
                 </div>
 
@@ -88,7 +89,7 @@ else
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Shipped Date</label>
                     <div class="col-sm-10">
-                        <input type="text" readonly class="form-control-plaintext" value="@order.ShippedDate" />
+                        <input type="text" readonly class="form-control-plaintext" value="@order.ShippedDate.ToDate()" />
                     </div>
                 </div>
 
@@ -157,16 +158,26 @@ else
             <table class="table">
                 <thead>
                     <tr>
-                        <th>
-                            Product Id
-                        </th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Discount</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var line in order.OrderDetails)
+                    @foreach (var line in order.OrderDetails)
                     {
                         <tr>
-                            <td>@line.ProductId</td>
+                            <td>
+                                <NavLink href="@("Products/View/" + line.ProductId)">
+                                    @GetProductName(line.ProductId)
+                                </NavLink>
+                            </td>
+                            <td>@line.Quantity</td>
+                            <td>@line.UnitPrice.Round()</td>
+                            <td>@line.DiscountPercent.Round()</td>
+                            <td>@line.Total.Round()</td>
                         </tr>
                     }
                 </tbody>
@@ -183,11 +194,23 @@ else
     public string orderId { get; set; }
 
     private OrderViewModel order;
+    private IEnumerable<ProductViewModel> products;
 
     protected override async Task OnInitializedAsync()
     {
         var orderModel = await _orderService.GetByIdAsync(int.Parse(orderId));
 
         order = _mapper.Map<OrderViewModel>(orderModel);
+
+        var productIds = order.OrderDetails.Select(x => x.ProductId);
+
+        var productModels = await _productService.GetAll().Where(p => productIds.Contains(p.ProductId)).ToListAsync();
+
+        products = _mapper.Map<IEnumerable<ProductViewModel>>(productModels);
+    }
+
+    private string GetProductName(int id)
+    {
+        return products.First(p => p.ProductId == id).ProductName;
     }
 }

@@ -8,6 +8,10 @@
         public short Quantity { get; set; }
         public float Discount { get; set; }
 
+        public ProductViewModel Product { get; set; }
+
+        public float DiscountPercent => Discount * 100;
+
         public decimal Total
         {
             get

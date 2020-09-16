@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj" />
     <ProjectReference Include="..\Northwind.Data\Northwind.Data.csproj" />
   </ItemGroup>
 

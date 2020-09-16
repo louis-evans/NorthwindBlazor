@@ -19,6 +19,8 @@ namespace Northwind.Blazor.Profiles
 
             CreateMap<OrderDetails, OrderDetailViewModel>();
 
+            CreateMap<Products, ProductViewModel>();
+
             CreateMap<Shippers, ShipperViewModel>();
         }
     }
