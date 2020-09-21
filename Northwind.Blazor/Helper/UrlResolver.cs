@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Northwind.Blazor.Helper
+﻿namespace Northwind.Blazor.Helper
 {
     public class UrlResolver
     {
@@ -20,6 +15,21 @@ namespace Northwind.Blazor.Helper
         public string OrderView(int id)
         {
             return $"Orders/View/{id}";
+        }
+
+        public string ProductView(int id)
+        {
+            return $"Products/View/{id}";
+        }
+
+        public string CategoryView(int id)
+        {
+            return $"Categories/View/{id}";
+        }
+
+        public string SupplierView(int id)
+        {
+            return $"Suppliers/View/{id}";
         }
     }
 }

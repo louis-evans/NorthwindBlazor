@@ -1,7 +1,96 @@
 ﻿@page "/Products"
 
-<h3>Index</h3>
+@inject IProductService _productService;
+@inject UrlResolver url;
+
+<h3>Products</h3>
+
+@if (allProducts == null)
+{
+    <LoadingPlaceholder />
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Search..." @bind-value="SearchTerm" @bind-value:event="oninput" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Unit Price</th>
+                        <th>Qty Per Unit</th>
+                        <th>Supplier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in products)
+                    {
+                        <tr>
+                            <td>@product.ProductId</td>
+                            <td>
+                                <NavLink href="@url.ProductView(product.ProductId)">
+                                    @product.ProductName
+                                </NavLink>
+                            </td>
+                            <td>
+                                <NavLink href="@url.CategoryView(product.Category.CategoryId)">
+                                    @product.Category.CategoryName
+                                </NavLink>
+                            </td>
+                            <td>@product.UnitPrice.Value.Round()</td>
+                            <td>@product.QuantityPerUnit</td>
+                            <td>
+                                <NavLink href="@url.SupplierView(product.Supplier.SupplierId)">
+                                    @product.Supplier.CompanyName
+                                </NavLink>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
 
 @code {
 
+    private string SearchTerm { get; set; }
+
+    private IEnumerable<ProductViewModel> allProducts;
+    private IEnumerable<ProductViewModel> products => allProducts.Where(ProductFilterPredicate);
+
+    protected async override Task OnInitializedAsync()
+    {
+        allProducts = await _productService
+            .GetAll()
+            .Include(x => x.Category)
+            .Include(x => x.Supplier)
+            .Select(x => new ProductViewModel
+            {
+                ProductId = x.ProductId,
+                ProductName = x.ProductName,
+                QuantityPerUnit = x.QuantityPerUnit,
+                UnitPrice = x.UnitPrice,
+                Supplier = x.Supplier,
+                Category = x.Category
+            })
+            .OrderBy(x => x.ProductName)
+            .ToArrayAsync();
+    }
+
+    private bool ProductFilterPredicate(ProductViewModel product)
+    {
+        return string.IsNullOrWhiteSpace(SearchTerm)
+            || product.ProductName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
+            || product.Category.CategoryName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
+            || product.Supplier.CompanyName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase);
+    }
 }
