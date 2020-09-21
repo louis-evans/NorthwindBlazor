@@ -12,6 +12,7 @@ app {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    z-index: 2147483647;
 }
 
 .main {
