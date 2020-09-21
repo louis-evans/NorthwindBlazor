@@ -7,6 +7,11 @@ namespace Northwind.Blazor.Helper
 {
     public class UrlResolver
     {
+        public string CustomerView(string id)
+        {
+            return $"Customers/View/{id}";
+        }
+
         public string EmployeeView(int id)
         {
             return $"Employees/View/{id}";

@@ -1,7 +1,82 @@
 ﻿@page "/Customers"
 
-<h3>Index</h3>
+<h3>Customers</h3>
+
+@inject ICustomerService _customerService;
+@inject AutoMapper.IMapper _mapper;
+@inject UrlResolver url;
+
+@if (allCustomers == null)
+{
+    <LoadingPlaceholder />
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Search..." @bind-value="SearchTerm" @bind-value:event="oninput"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Contact Name</th>
+                        <th>Contact Title</th>
+                        <th>City</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customer in customers)
+                    {
+                        <tr>
+                            <td>
+                                <NavLink href="@url.CustomerView(customer.CustomerId)">
+                                    @customer.CustomerId
+                                </NavLink>
+                            </td>
+                            <td>
+                                <NavLink href="@url.CustomerView(customer.CustomerId)">
+                                    @customer.CompanyName
+                                </NavLink>
+                            </td>
+                            <td>@customer.ContactName</td>
+                            <td>@customer.ContactTitle</td>
+                            <td>@customer.City</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+}
 
 @code {
 
+    private string SearchTerm { get; set; }
+
+    private IEnumerable<CustomerViewModel> allCustomers;
+    private IEnumerable<CustomerViewModel> customers => allCustomers.Where(CustomerSearchPredicate);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var customerModels = await _customerService.GetAll().OrderBy(x => x.CompanyName).ToArrayAsync();
+
+        allCustomers = _mapper.Map<IEnumerable<CustomerViewModel>>(customerModels);
+    }
+
+    private bool CustomerSearchPredicate(CustomerViewModel customer)
+    {
+        return string.IsNullOrWhiteSpace(SearchTerm)
+            || customer.CompanyName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase) 
+            || customer.CustomerId.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
+            || customer.ContactName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
+            || customer.City.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase);
+    }
 }
