@@ -66,15 +66,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var customerModels = await _customerService.GetAll().OrderBy(x => x.CompanyName).ToArrayAsync();
-
-        allCustomers = _mapper.Map<IEnumerable<CustomerViewModel>>(customerModels);
+        allCustomers = await _customerService
+            .GetAll()
+            .Select(x => new CustomerViewModel
+            {
+                CustomerId = x.CustomerId,
+                CompanyName = x.CompanyName,
+                ContactName = x.ContactName,
+                ContactTitle = x.ContactTitle,
+                City = x.City
+            })
+            .OrderBy(x => x.CompanyName)
+            .ToArrayAsync();
     }
 
     private bool CustomerSearchPredicate(CustomerViewModel customer)
     {
         return string.IsNullOrWhiteSpace(SearchTerm)
-            || customer.CompanyName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase) 
+            || customer.CompanyName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
             || customer.CustomerId.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
             || customer.ContactName.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase)
             || customer.City.StartsWith(SearchTerm, StringComparison.InvariantCultureIgnoreCase);
