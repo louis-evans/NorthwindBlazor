@@ -11,5 +11,10 @@ namespace Northwind.Blazor.Helper
         {
             return $"Employees/View/{id}";
         }
+
+        public string OrderView(int id)
+        {
+            return $"Orders/View/{id}";
+        }
     }
 }

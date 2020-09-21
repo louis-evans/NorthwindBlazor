@@ -2,6 +2,7 @@
 
 @inject AutoMapper.IMapper _mapper;
 @inject IOrderService _orderService;
+@inject UrlResolver url;
 
 <h3>Orders</h3>
 
@@ -34,22 +35,33 @@ else
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Employee</th>
                 <th>Date Created</th>
+                <th>Required Date</th>
+                <th>Ship Date</th>
                 <th>Total</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var order in orders)
             {
-                <tr>
-                    <td>
-                        <NavLink href=@("Orders/View/" + order.OrderId)>
-                            @order.OrderId
-                        </NavLink>
-                    </td>
-                    <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
-                    <td>@order.OrderDetails.Sum(x => x.Total).ToString("0.00")</td>
-                </tr>
+            <tr>
+                <td>
+                    <NavLink href="@url.OrderView(order.OrderId)">
+                        @order.OrderId
+                    </NavLink>
+                </td>
+                <td>
+                    <NavLink href="@url.EmployeeView(order.EmployeeId.Value)">
+                        @order.Employee.FullName
+                    </NavLink>
+                    
+                </td>
+                <td>@order.OrderDate.ToDate()</td>
+                <td>@order.RequiredDate.ToDate()</td>
+                <td>@order.ShippedDate.ToDate()</td>
+                <td>@order.OrderDetails.Sum(x => x.Total).Round()</td>
+            </tr>
             }
         </tbody>
     </table>
@@ -107,6 +119,7 @@ else
     {
         var pagedOrders = _orderService.GetAll()
                             .Include(x => x.OrderDetails)
+                            .Include(x => x.Employee)
                             .OrderByDescending(o => o.OrderDate)
                             .Skip(currentPage * MaxPageCount)
                             .Take(MaxPageCount)

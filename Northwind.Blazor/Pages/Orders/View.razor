@@ -155,36 +155,36 @@ else
 
         <div class="row">
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Unit Price</th>
-                        <th>Discount</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var line in order.OrderDetails)
-                    {
+            <div class="col">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>
-                                <NavLink href="@("Products/View/" + line.ProductId)">
-                                    @GetProductName(line.ProductId)
-                                </NavLink>
-                            </td>
-                            <td>@line.Quantity</td>
-                            <td>@line.UnitPrice.Round()</td>
-                            <td>@line.DiscountPercent.Round()</td>
-                            <td>@line.Total.Round()</td>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Discount</th>
+                            <th>Total</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-
+                    </thead>
+                    <tbody>
+                        @foreach (var line in order.OrderDetails)
+                        {
+                            <tr>
+                                <td>
+                                    <NavLink href="@("Products/View/" + line.ProductId)">
+                                        @GetProductName(line.ProductId)
+                                    </NavLink>
+                                </td>
+                                <td>@line.Quantity</td>
+                                <td>@line.UnitPrice.Round()</td>
+                                <td>@line.DiscountPercent.Round()</td>
+                                <td>@line.Total.Round()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </form>
 }
 
