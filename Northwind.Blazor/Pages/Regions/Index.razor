@@ -1,7 +1,43 @@
 ﻿@page "/Regions"
 
-<h3>Index</h3>
+@inject IRegionService regionService;
+@inject AutoMapper.IMapper _mapper;
+
+<h3>Regions</h3>
+
+@if (regions == null)
+{
+    <LoadingPlaceholder/>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var region in regions)
+            {
+                <tr>
+                    <td>@region.RegionId</td>
+                    <td>@region.RegionDescription</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
 
+    private IEnumerable<RegionViewModel> regions;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var regionModels = await regionService.GetAll().ToArrayAsync();
+
+        regions = _mapper.Map<IEnumerable<RegionViewModel>>(regionModels).OrderBy(x => x.RegionDescription);
+    }
 }

@@ -8,6 +8,6 @@ namespace Northwind.Blazor.ViewModels
         public string TerritoryDescription { get; set; }
         public int RegionId { get; set; }
 
-        public virtual Region Region { get; set; }
+        public virtual RegionViewModel Region { get; set; }
     }
 }

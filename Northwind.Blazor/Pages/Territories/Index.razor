@@ -1,6 +1,7 @@
 ﻿@page "/Territories"
 
 @inject ITerritoryService _territoryService;
+@inject AutoMapper.IMapper _mapper;
 @inject UrlResolver url;
 
 <h3>Territories</h3>
@@ -42,17 +43,12 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        territories = await _territoryService
+        var territoryModels = await _territoryService
             .GetAll()
             .Include(x => x.Region)
-            .Select(x => new TerritoryViewModel
-            {
-                TerritoryId = x.TerritoryId,
-                TerritoryDescription = x.TerritoryDescription,
-                Region = x.Region
-            })
-            .OrderBy(x => x.TerritoryDescription)
             .ToArrayAsync();
+
+        territories = _mapper.Map<IEnumerable<TerritoryViewModel>>(territoryModels).OrderBy(x => x.TerritoryDescription);
     }
 
 }
