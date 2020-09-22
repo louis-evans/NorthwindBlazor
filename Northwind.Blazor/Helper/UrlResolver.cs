@@ -32,6 +32,11 @@
             return $"Categories/View/{id}";
         }
 
+        public string RegionsView(int id)
+        {
+            return $"Regions/View/{id}";
+        }
+
         public string ShipperView(int id)
         {
             return $"Shippers/View/{id}";
@@ -40,6 +45,11 @@
         public string SupplierView(int id)
         {
             return $"Suppliers/View/{id}";
+        }
+
+        public string TerritoriesView(string id)
+        {
+            return $"Territories/View/{id}";
         }
     }
 }

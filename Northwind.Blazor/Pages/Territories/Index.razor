@@ -1,7 +1,58 @@
 ﻿@page "/Territories"
 
-<h3>Index</h3>
+@inject ITerritoryService _territoryService;
+@inject UrlResolver url;
+
+<h3>Territories</h3>
+
+@if (territories == null)
+{
+    <LoadingPlaceholder/>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Region</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var territory in territories)
+            {
+                <tr>
+                    <td>@territory.TerritoryId</td>
+                    <td>
+                        <NavLink href="@url.TerritoriesView(territory.TerritoryId)">
+                            @territory.TerritoryDescription
+                        </NavLink>
+                    </td>
+                    <td>@territory.Region.RegionDescription</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+
+    private IEnumerable<TerritoryViewModel> territories;
+
+    protected async override Task OnInitializedAsync()
+    {
+        territories = await _territoryService
+            .GetAll()
+            .Include(x => x.Region)
+            .Select(x => new TerritoryViewModel
+            {
+                TerritoryId = x.TerritoryId,
+                TerritoryDescription = x.TerritoryDescription,
+                Region = x.Region
+            })
+            .OrderBy(x => x.TerritoryDescription)
+            .ToArrayAsync();
+    }
 
 }

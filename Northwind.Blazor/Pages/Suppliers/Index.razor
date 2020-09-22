@@ -1,7 +1,64 @@
 ﻿@page "/Suppliers"
 
-<h3>Index</h3>
+@inject ISuppliersService _supplierService;
+@inject UrlResolver url;
+
+<h3>Suppliers</h3>
+
+@if(suppliers == null)
+{
+    <LoadingPlaceholder/>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Contact Name</th>
+                <th>Contact Role</th>
+                <th>City</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var supplier in suppliers)
+            {
+                <tr>
+                    <td>@supplier.SupplierId</td>
+                    <td>
+                        <NavLink href="@url.SupplierView(supplier.SupplierId)">
+                            @supplier.CompanyName
+                        </NavLink>
+                    </td>
+                    <td>@supplier.ContactName</td>
+                    <td>@supplier.ContactTitle</td>
+                    <td>@supplier.City</td>
+                    <td>@supplier.Country</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
 
+    private IEnumerable<SupplierViewModel> suppliers;
+
+    protected async override Task OnInitializedAsync()
+    {
+        suppliers = await _supplierService
+            .GetAll()
+            .Select(x => new SupplierViewModel
+            {
+                SupplierId = x.SupplierId,
+                CompanyName = x.CompanyName,
+                ContactName = x.ContactName,
+                ContactTitle = x.ContactTitle,
+                City = x.City,
+                Country = x.Country
+            })
+            .ToArrayAsync();
+    }
 }

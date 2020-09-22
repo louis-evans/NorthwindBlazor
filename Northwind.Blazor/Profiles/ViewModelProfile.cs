@@ -24,6 +24,8 @@ namespace Northwind.Blazor.Profiles
             CreateMap<Products, ProductViewModel>();
 
             CreateMap<Shippers, ShipperViewModel>();
+
+            CreateMap<Suppliers, SupplierViewModel>();
         }
     }
 }

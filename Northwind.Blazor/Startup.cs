@@ -81,6 +81,7 @@ namespace Northwind.Blazor
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IShipperService, ShipperService>();
+            services.AddTransient<ISuppliersService, SuppliersService>();
             services.AddTransient<ITerritoryService, TerritoryService>();
         }
     }
