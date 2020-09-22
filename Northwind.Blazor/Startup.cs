@@ -75,6 +75,7 @@ namespace Northwind.Blazor
         {
             services.AddSingleton<UrlResolver>();
 
+            services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IOrderService, OrderService>();

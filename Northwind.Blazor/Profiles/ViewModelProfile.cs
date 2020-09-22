@@ -8,6 +8,8 @@ namespace Northwind.Blazor.Profiles
     {
         public ViewModelProfile()
         {
+            CreateMap<Categories, CategoryViewModel>();
+
             CreateMap<Customers, CustomerViewModel>();
 
             CreateMap<Employees, EmployeeViewModel>()

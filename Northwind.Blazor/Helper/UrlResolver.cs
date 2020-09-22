@@ -2,6 +2,11 @@
 {
     public class UrlResolver
     {
+        public string CategoryView(string id)
+        {
+            return $"Categories/View/{id}";
+        }
+
         public string CustomerView(string id)
         {
             return $"Customers/View/{id}";

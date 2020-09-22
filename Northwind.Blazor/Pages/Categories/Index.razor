@@ -1,7 +1,55 @@
 ﻿@page "/Categories"
 
-<h3>Index</h3>
+@inject ICategoriesService _categoriesService;
+@inject UrlResolver url;
 
-@code {
+<h3>Categories</h3>
 
+@if(categories == null)
+{
+    <LoadingPlaceholder/>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var category in categories)
+            {
+                <tr>
+                    <td>@category.CategoryId</td>
+                    <td>
+                        <NavLink href="@url.CategoryView(category.CategoryId)">
+                            @category.CategoryName
+                        </NavLink>
+                    </td>
+                    <td>@category.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {  
+
+    private IEnumerable<CategoryViewModel> categories;
+
+    protected async override Task OnInitializedAsync()
+    {
+        categories = await _categoriesService
+            .GetAll()
+            .Select(x => new CategoryViewModel
+            {
+                CategoryId = x.CategoryId,
+                CategoryName = x.CategoryName,
+                Description = x.Description
+            })
+            .ToArrayAsync();
+    }
 }
