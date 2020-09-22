@@ -1,7 +1,55 @@
 ﻿@page "/Shippers"
 
-<h3>Index</h3>
+@inject IShipperService _shipperService;
+@inject UrlResolver url;
+
+<h3>Shippers</h3>
+
+@if(shippers == null)
+{
+    <LoadingPlaceholder />
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var shipper in shippers)
+            {
+                <tr>
+                    <td>@shipper.ShipperId</td>
+                    <td>
+                        <NavLink href="@url.ShipperView(shipper.ShipperId)">
+                            @shipper.CompanyName
+                        </NavLink>
+                    </td>
+                    <td>@shipper.Phone</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
 
+    private IEnumerable<ShipperViewModel> shippers;
+
+    protected async override Task OnInitializedAsync()
+    {
+        shippers = await _shipperService
+            .GetAll()
+            .Select(x => new ShipperViewModel
+            {
+                ShipperId = x.ShipperId,
+                CompanyName = x.CompanyName,
+                Phone = x.Phone
+            })
+            .ToArrayAsync();
+    }
 }

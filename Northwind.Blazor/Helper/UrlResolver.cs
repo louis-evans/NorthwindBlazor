@@ -32,6 +32,11 @@
             return $"Categories/View/{id}";
         }
 
+        public string ShipperView(int id)
+        {
+            return $"Shippers/View/{id}";
+        }
+
         public string SupplierView(int id)
         {
             return $"Suppliers/View/{id}";
